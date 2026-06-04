@@ -1,0 +1,18 @@
+/*
+ * Match the FORGE Studio docs (https://forge-studio-80p.pages.dev/).
+ *
+ * Those docs use the stock VitePress default theme (indigo brand) with just two
+ * tweaks, mirrored here so this landing page is visually consistent with the
+ * suite's documentation:
+ *   - the home hero name renders in the solid brand color (not the default gradient)
+ *   - no hero image glow
+ *
+ * Keep the default indigo brand (do NOT override --vp-c-brand-*) so colors stay
+ * in lockstep with the subproject docs.
+ */
+:root {
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+  --vp-home-hero-name-background: transparent;
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
+}

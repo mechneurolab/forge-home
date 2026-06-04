@@ -1,0 +1,29 @@
+name = "forge-home"
+main = "worker/index.ts"
+compatibility_date = "2026-01-01"
+
+# Static assets = the built VitePress landing page.
+# The Worker runs for any request that doesn't match a static asset
+# (i.e. the /forge, /studio, /sentinel subpaths), and serves assets otherwise.
+[assets]
+directory = "docs/.vitepress/dist"
+binding = "ASSETS"
+
+# Subproject origins — each subproject's own live deployment URL.
+#
+# Leave an origin EMPTY to serve a "coming soon" page for that subpath.
+# Set it to the deployment URL to switch the subproject on (no code change).
+#
+# IMPORTANT: the subproject must be BUILT to serve under its prefix before you
+# point an origin here — e.g. VitePress `base: '/studio/'`. See worker/index.ts.
+#
+# Studio is live at https://forge-studio-80p.pages.dev but currently built for
+# root ('/'); once it's rebuilt with base '/studio/', set:
+#   STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"
+[vars]
+FORGE_ORIGIN = ""
+STUDIO_ORIGIN = ""
+SENTINEL_ORIGIN = ""
+
+# Bind the apex domain once DNS + the Worker are wired up in Cloudflare:
+# routes = [{ pattern = "forge-mri.dev", custom_domain = true }]

@@ -1,0 +1,20 @@
+{
+  "name": "forge-home",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Umbrella landing page for the FORGE MRI suite (forge-mri.dev)",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "deploy": "npm run build && wrangler deploy",
+    "cf:dev": "npm run build && wrangler dev",
+    "cf:preview": "npm run build && wrangler versions upload"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260604.1",
+    "vitepress": "^1.6.4",
+    "wrangler": "^4.98.0"
+  }
+}
