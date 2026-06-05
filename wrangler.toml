@@ -2,6 +2,14 @@ name = "forge-home"
 main = "worker/index.ts"
 compatibility_date = "2026-01-01"
 
+# Apex domain — Cloudflare auto-creates the proxied DNS record + TLS cert
+# (the forge-mri.dev zone is in this account).
+routes = [{ pattern = "forge-mri.dev", custom_domain = true }]
+
+# Keep per-PR preview URLs (used by CI `wrangler versions upload`) working even
+# though the production *.workers.dev URL is retired in favor of forge-mri.dev.
+preview_urls = true
+
 # Static assets = the built VitePress landing page.
 # The Worker runs for any request that doesn't match a static asset
 # (i.e. the /forge, /studio, /sentinel subpaths), and serves assets otherwise.
@@ -24,6 +32,3 @@ binding = "ASSETS"
 FORGE_ORIGIN = ""
 STUDIO_ORIGIN = ""
 SENTINEL_ORIGIN = ""
-
-# Bind the apex domain once DNS + the Worker are wired up in Cloudflare:
-# routes = [{ pattern = "forge-mri.dev", custom_domain = true }]
