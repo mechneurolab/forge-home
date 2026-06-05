@@ -117,11 +117,13 @@ function comingSoon(name: string): Response {
 const BANNER_H = 36
 
 function bannerHtml(segment: string): string {
+  // target="_self" forces a real page load — without it VitePress (studio/sentinel)
+  // hijacks the same-origin click and tries to SPA-route to a non-existent page.
   const tab = (seg: string, label: string) =>
-    `<a href="/${seg}/"${seg === segment ? ' class="active"' : ''}>${label}</a>`
+    `<a href="/${seg}/" target="_self"${seg === segment ? ' class="active"' : ''}>${label}</a>`
   return (
     `<div id="fsb">` +
-    `<a class="fsb-brand" href="/">◆ FORGE Suite</a>` +
+    `<a class="fsb-brand" href="/" target="_self">◆ FORGE Suite</a>` +
     `<nav class="fsb-nav">${tab('forge', 'FORGE')}${tab('studio', 'Studio')}${tab('sentinel', 'Sentinel')}</nav>` +
     `<div class="fsb-meta">` +
     `<a href="https://github.com/mechneurolab" target="_blank" rel="noopener">GitHub</a>` +

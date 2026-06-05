@@ -18,14 +18,17 @@ features:
     details: Fast, Optimized Reconstruction via Gridding Engine — GPU-accelerated iterative MRI recon (Apple Metal & NVIDIA CUDA).
     link: /forge/
     linkText: Open docs
+    target: _self
   - title: FORGE Studio
     details: Desktop app for building, running, and monitoring multi-stage MRI reconstruction pipelines.
     link: /studio/
     linkText: Open docs
+    target: _self
   - title: Sentinel
     details: Magnetic resonance elastography in Julia — recovers tissue stiffness from MRI displacement fields.
     link: /sentinel/
     linkText: Open docs
+    target: _self
 ---
 
 ## How the suite fits together {#how-it-works}

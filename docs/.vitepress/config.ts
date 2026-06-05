@@ -11,10 +11,12 @@ export default defineConfig({
   description: 'Open MRI software suite — forge-mri.dev',
   cleanUrls: true,
   themeConfig: {
+    // target: '_self' forces a full page load to the proxied subproject (these are
+    // separate apps, not routes within this VitePress site, so SPA nav would break).
     nav: [
-      { text: 'FORGE', link: '/forge/' },
-      { text: 'Studio', link: '/studio/' },
-      { text: 'Sentinel', link: '/sentinel/' },
+      { text: 'FORGE', link: '/forge/', target: '_self' },
+      { text: 'Studio', link: '/studio/', target: '_self' },
+      { text: 'Sentinel', link: '/sentinel/', target: '_self' },
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/mechneurolab' },
