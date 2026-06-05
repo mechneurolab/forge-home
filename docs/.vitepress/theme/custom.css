@@ -16,3 +16,53 @@
   --vp-home-hero-image-background-image: none;
   --vp-home-hero-image-filter: none;
 }
+
+/* "How it works" pipeline diagram on the home page */
+.suite-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2rem 0 1rem;
+}
+.suite-flow .stage,
+.suite-flow .tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  min-width: 112px;
+}
+.suite-flow .stage {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-1);
+}
+.suite-flow .tool {
+  background: var(--vp-c-brand-1);
+  color: #fff;
+}
+.suite-flow .stage span,
+.suite-flow .tool span {
+  display: block;
+  font-weight: 400;
+  font-size: 0.72rem;
+  opacity: 0.85;
+  margin-top: 0.15rem;
+}
+.suite-flow .arrow {
+  color: var(--vp-c-text-3);
+  font-size: 1.4rem;
+}
+.suite-studio {
+  max-width: 660px;
+  margin: 0.5rem auto 2rem;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  background: var(--vp-c-brand-soft);
+  border-radius: 10px;
+}

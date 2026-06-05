@@ -7,7 +7,7 @@ import { defineConfig } from 'vitepress'
 // router in ../../worker/index.ts. They resolve in production (and `wrangler dev`),
 // but 404 under plain `vitepress dev`. That's expected.
 export default defineConfig({
-  title: 'FORGE',
+  title: 'FORGE Suite',
   description: 'Open MRI software suite — forge-mri.dev',
   cleanUrls: true,
   themeConfig: {
