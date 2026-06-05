@@ -45,8 +45,24 @@ export default {
       // build at its own root, so it expects root-relative paths.
       const rest = url.pathname.slice(segment.length + 1) || '/'
       const target = new URL(rest + url.search, origin)
-      // Preserve method, headers, and body; just swap the origin.
-      return fetch(new Request(target, request))
+      const resp = await fetch(new Request(target, request))
+
+      // Inject the unified FORGE Suite banner into HTML pages only (not assets).
+      const contentType = resp.headers.get('content-type') || ''
+      if (!contentType.includes('text/html')) return resp
+      const rewritten = new HTMLRewriter()
+        .on('head', new HeadInjector(bannerCss(segment)))
+        .on('body', new BodyInjector(bannerHtml(segment)))
+        .transform(resp)
+      // HTMLRewriter emits decompressed HTML — drop stale encoding/length headers.
+      const headers = new Headers(rewritten.headers)
+      headers.delete('content-encoding')
+      headers.delete('content-length')
+      return new Response(rewritten.body, {
+        status: rewritten.status,
+        statusText: rewritten.statusText,
+        headers,
+      })
     }
 
     // Everything else is the landing page.
@@ -92,4 +108,68 @@ function comingSoon(name: string): Response {
       'cache-control': 'no-store',
     },
   })
+}
+
+// ---- Unified FORGE Suite banner ----------------------------------------------
+// Injected into every proxied subproject page so the three docs sites share one
+// cross-suite bar. Centralized here — no changes needed in the subproject repos.
+
+const BANNER_H = 36
+
+function bannerHtml(segment: string): string {
+  const tab = (seg: string, label: string) =>
+    `<a href="/${seg}/"${seg === segment ? ' class="active"' : ''}>${label}</a>`
+  return (
+    `<div id="fsb">` +
+    `<a class="fsb-brand" href="/">◆ FORGE Suite</a>` +
+    `<nav class="fsb-nav">${tab('forge', 'FORGE')}${tab('studio', 'Studio')}${tab('sentinel', 'Sentinel')}</nav>` +
+    `<div class="fsb-meta">` +
+    `<a href="https://github.com/mechneurolab" target="_blank" rel="noopener">GitHub</a>` +
+    `<span class="fsb-lab">Mechanical Neuroimaging Lab · Univ. of Delaware</span>` +
+    `</div>` +
+    `</div>`
+  )
+}
+
+function bannerCss(segment: string): string {
+  // Each theme has its own fixed/sticky header; offset it below the banner.
+  // VitePress (studio, sentinel) has a native top slot for exactly this.
+  const themeOffset =
+    segment === 'forge'
+      ? `.md-header{top:${BANNER_H}px!important}` +
+        `.md-tabs{top:${BANNER_H + 48}px!important}` +
+        `[data-md-component=announce]{top:${BANNER_H}px}`
+      : `:root{--vp-layout-top-height:${BANNER_H}px!important}`
+  return (
+    `html{scroll-padding-top:${BANNER_H}px}` +
+    `#fsb{position:fixed;top:0;left:0;right:0;height:${BANNER_H}px;z-index:2147483000;` +
+    `display:flex;align-items:center;gap:1rem;padding:0 14px;box-sizing:border-box;` +
+    `background:#1b1b2e;color:#fff;` +
+    `font:600 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}` +
+    `#fsb a{color:#fff;text-decoration:none}` +
+    `#fsb .fsb-brand{font-weight:800;letter-spacing:.2px}` +
+    `#fsb .fsb-nav{display:flex;gap:.85rem}` +
+    `#fsb .fsb-nav a{opacity:.72;font-weight:600}` +
+    `#fsb .fsb-nav a:hover{opacity:1}` +
+    `#fsb .fsb-nav a.active{opacity:1;color:#9db2ff}` +
+    `#fsb .fsb-meta{margin-left:auto;display:flex;align-items:center;gap:.9rem;font-weight:500;font-size:12px}` +
+    `#fsb .fsb-meta a{opacity:.85}#fsb .fsb-meta a:hover{opacity:1}` +
+    `#fsb .fsb-lab{color:#aeaec2}` +
+    `@media(max-width:720px){#fsb .fsb-lab{display:none}}` +
+    themeOffset
+  )
+}
+
+class HeadInjector {
+  constructor(private readonly css: string) {}
+  element(el: Element) {
+    el.append(`<style>${this.css}</style>`, { html: true })
+  }
+}
+
+class BodyInjector {
+  constructor(private readonly html: string) {}
+  element(el: Element) {
+    el.prepend(this.html, { html: true })
+  }
 }
