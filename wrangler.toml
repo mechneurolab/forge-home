@@ -28,7 +28,8 @@ binding = "ASSETS"
 #
 # Studio (forge-studio#43): VitePress, base '/studio/'.
 # Forge: MkDocs Material — relative URLs, no repo change needed to publish.
+# Sentinel (sentinel#12): Documenter + DocumenterVitepress, base forced to '/sentinel/'.
 [vars]
 FORGE_ORIGIN = "https://forge-mri-docs.pages.dev"
 STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"
-SENTINEL_ORIGIN = ""
+SENTINEL_ORIGIN = "https://sentinel-docs-2zu.pages.dev"

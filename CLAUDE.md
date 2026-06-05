@@ -46,9 +46,9 @@ Two pieces deploy together as a single Cloudflare Worker:
    `/sentinel` to the origins configured in `wrangler.toml` (`[vars]`). Routing is keyed on the
    first path segment in `ROUTES`. If a subproject's origin is **empty**, the Worker serves a
    built-in "coming soon" page instead of proxying — so a subproject is switched on by setting
-   its origin in `wrangler.toml`, with no code change. `STUDIO_ORIGIN` is set
-   (`forge-studio-80p.pages.dev`), so `/studio` serves live docs; `/forge` and `/sentinel` are
-   still empty and show the coming-soon page.
+   its origin in `wrangler.toml`, with no code change. All three origins are now set —
+   `/forge` (MkDocs · forge-mri-docs.pages.dev), `/studio` (VitePress · forge-studio-80p.pages.dev),
+   and `/sentinel` (Documenter+VitePress · sentinel-docs-2zu.pages.dev) serve live docs.
 
 ### The subpath base-path contract (important)
 
