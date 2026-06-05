@@ -22,13 +22,11 @@ binding = "ASSETS"
 # Leave an origin EMPTY to serve a "coming soon" page for that subpath.
 # Set it to the deployment URL to switch the subproject on (no code change).
 #
-# IMPORTANT: the subproject must be BUILT to serve under its prefix before you
-# point an origin here — e.g. VitePress `base: '/studio/'`. See worker/index.ts.
+# IMPORTANT: build the subproject with base '/<name>/' and deploy it at its own
+# root; the Worker strips the prefix before proxying. See worker/index.ts.
 #
-# Studio is live at https://forge-studio-80p.pages.dev but currently built for
-# root ('/'); once it's rebuilt with base '/studio/', set:
-#   STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"
+# Studio: live — forge-studio docs built with base '/studio/' (forge-studio#43).
 [vars]
 FORGE_ORIGIN = ""
-STUDIO_ORIGIN = ""
+STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"
 SENTINEL_ORIGIN = ""

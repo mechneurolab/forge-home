@@ -11,10 +11,11 @@
  *     instead of proxying to nothing. Set the origin in wrangler.toml to switch
  *     the subproject on — no code change needed.
  *
- * The base-path contract: the prefix is passed through unchanged, so each
- * subproject MUST serve its docs UNDER that prefix. For a VitePress subproject:
- *     export default defineConfig({ base: '/forge/' })   // or /studio/, /sentinel/
- * Otherwise its absolute asset URLs (/assets/...) escape the subpath.
+ * The base-path contract: each subproject is built with its base set to the
+ * subpath — e.g. VitePress `base: '/studio/'` — and deployed at its own origin
+ * ROOT. The Worker strips the `/studio` prefix before proxying, so the origin
+ * receives root-relative paths, while the browser still sees `/studio/...` and
+ * the build's absolute asset URLs (/studio/assets/...) resolve back through here.
  */
 interface Env {
   ASSETS: Fetcher
@@ -40,7 +41,10 @@ export default {
       if (!origin) {
         return comingSoon(route.name)
       }
-      const target = new URL(url.pathname + url.search, origin)
+      // Strip the /<segment> prefix: the origin serves the base-'/<segment>/'
+      // build at its own root, so it expects root-relative paths.
+      const rest = url.pathname.slice(segment.length + 1) || '/'
+      const target = new URL(rest + url.search, origin)
       // Preserve method, headers, and body; just swap the origin.
       return fetch(new Request(target, request))
     }

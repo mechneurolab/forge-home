@@ -13,7 +13,7 @@ subpaths to the suite's separately-deployed subprojects:
 | `forge-mri.dev/`      | this landing page        | (this repo)                |
 | `forge-mri.dev/forge` | FORGE (reconstruction)   | `mechneurolab/forge`       |
 | `forge-mri.dev/studio`| FORGE Studio             | `mechneurolab/forge-studio`|
-| `forge-mri.dev/sentinel` | Sentinel (MRE)        | `mechneurolab/Sentinel.jl` |
+| `forge-mri.dev/sentinel` | Sentinel (MRE)        | `mechneurolab/sentinel`    |
 
 The subprojects are **not** part of this repo. They have their own repos, CI, and deployments;
 this repo only links to them and routes their subpaths.
@@ -46,17 +46,18 @@ Two pieces deploy together as a single Cloudflare Worker:
    `/sentinel` to the origins configured in `wrangler.toml` (`[vars]`). Routing is keyed on the
    first path segment in `ROUTES`. If a subproject's origin is **empty**, the Worker serves a
    built-in "coming soon" page instead of proxying — so a subproject is switched on by setting
-   its origin in `wrangler.toml`, with no code change. As of this writing all three origins are
-   empty (none of the subprojects are deployed under their prefix yet).
+   its origin in `wrangler.toml`, with no code change. `STUDIO_ORIGIN` is set
+   (`forge-studio-80p.pages.dev`), so `/studio` serves live docs; `/forge` and `/sentinel` are
+   still empty and show the coming-soon page.
 
 ### The subpath base-path contract (important)
 
-The Worker passes the path through **unchanged**, prefix included. So each subproject must serve
-its docs *under its prefix*, not at root. For a VitePress subproject that means
-`base: '/forge/'` (or `/studio/`, `/sentinel/`); for a Documenter.jl (Julia) subproject, deploy
-under the same prefix. If a subproject is built with `base: '/'`, its absolute asset URLs
-(`/assets/...`) will escape the subpath and hit this landing page instead — that's the symptom of
-a misconfigured base.
+Each subproject is built with its base set to the subpath — VitePress `base: '/studio/'` (or
+`/forge/`, `/sentinel/`), or the equivalent for a Documenter.jl (Julia) subproject — and deployed
+at its **own origin root**. The Worker **strips** the `/<name>` prefix before proxying, so the
+origin receives root-relative paths while the browser still sees `/<name>/...` and the build's
+absolute asset URLs (`/studio/assets/...`) resolve back through the Worker. A subproject built
+with `base: '/'` will not work — its assets point at the domain root and miss the subpath.
 
 ### Why subpaths 404 under `npm run dev`
 
@@ -68,13 +69,14 @@ production — but not under plain `vitepress dev`. This is expected, not a bug.
 
 CI is in `.github/workflows/ci.yml`: every push/PR builds; PRs upload a Worker preview version
 (unique URL); pushes to `main` deploy. Both deploy steps need repo secrets
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. The apex domain is bound in Cloudflare (and
-can be pinned via the commented `routes` line in `wrangler.toml`).
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (both set). The apex domain `forge-mri.dev` is
+bound to the Worker via the `routes` (`custom_domain`) entry in `wrangler.toml`.
 
 ## Switching a subproject on
 
-1. Build/deploy the subproject with its `base` set to the matching prefix (e.g. VitePress
-   `base: '/studio/'`).
+1. Build/deploy the subproject with VitePress `base: '/<name>/'`, deployed at its own root (the
+   Worker strips the prefix). `/studio` is the working example — see `mechneurolab/forge-studio`
+   `docs/.vitepress/config.ts`.
 2. Set its origin in `wrangler.toml` `[vars]` to the deployment URL (e.g.
    `STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"`).
 3. Deploy this Worker. The "coming soon" page is replaced by the proxied docs.
@@ -84,5 +86,6 @@ can be pinned via the commented `routes` line in `wrangler.toml`).
 - Adding/renaming a subproject is a **two-place** change: add a route in `worker/index.ts`
   (`ROUTES` + the `Env` origin var) and its origin in `wrangler.toml` `[vars]`, then add the
   feature card in `docs/index.md` and nav entry in `config.ts`.
-- The FORGE and Sentinel project-card descriptions in `docs/index.md` are placeholders marked
-  with `# TODO` (Studio's is its real one-liner). The subprojects' repos are private.
+- When lighting up a subproject whose docs include internal `docs/superpowers/**` planning files
+  (both `forge` and `forge-studio` have them), exclude those via VitePress `srcExclude` — they
+  contain tag-like text that breaks the build. `forge-studio` already does this.
