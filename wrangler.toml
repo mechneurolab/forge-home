@@ -22,11 +22,13 @@ binding = "ASSETS"
 # Leave an origin EMPTY to serve a "coming soon" page for that subpath.
 # Set it to the deployment URL to switch the subproject on (no code change).
 #
-# IMPORTANT: build the subproject with base '/<name>/' and deploy it at its own
-# root; the Worker strips the prefix before proxying. See worker/index.ts.
+# IMPORTANT: the docs must resolve their assets under /<name> — either via a base
+# set to the subpath (VitePress) or relative asset URLs (MkDocs). The Worker
+# strips the prefix before proxying. See worker/index.ts.
 #
-# Studio: live — forge-studio docs built with base '/studio/' (forge-studio#43).
+# Studio (forge-studio#43): VitePress, base '/studio/'.
+# Forge: MkDocs Material — relative URLs, no repo change needed to publish.
 [vars]
-FORGE_ORIGIN = ""
+FORGE_ORIGIN = "https://forge-mri-docs.pages.dev"
 STUDIO_ORIGIN = "https://forge-studio-80p.pages.dev"
 SENTINEL_ORIGIN = ""
