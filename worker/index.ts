@@ -85,6 +85,11 @@ function comingSoon(name: string): Response {
 </html>`
   return new Response(html, {
     status: 200,
-    headers: { 'content-type': 'text/html; charset=utf-8' },
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      // Never cache the placeholder — visitors must get the real docs the moment
+      // the subproject's origin is set, without a stale cached "coming soon".
+      'cache-control': 'no-store',
+    },
   })
 }
