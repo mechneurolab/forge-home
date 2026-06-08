@@ -45,7 +45,27 @@ export default {
       // build at its own root, so it expects root-relative paths.
       const rest = url.pathname.slice(segment.length + 1) || '/'
       const target = new URL(rest + url.search, origin)
-      const resp = await fetch(new Request(target, request))
+      const resp = await fetch(new Request(target, request, { redirect: 'manual' }))
+
+      // Re-add the /<segment> prefix to same-origin redirect Locations. The
+      // origin serves its base-'/<segment>/' build at its own ROOT, so its
+      // redirects (e.g. the trailing-slash 308 a static host issues for a
+      // directory index: /studio/catalog -> /catalog/) point at root-relative
+      // paths. Passed through unchanged, the browser resolves them against
+      // forge-mri.dev and loses the /studio prefix -> 404. Rewrite them here so
+      // the redirect stays under the umbrella subpath.
+      if (resp.status >= 300 && resp.status < 400 && resp.headers.has('location')) {
+        const location = resp.headers.get('location') as string
+        const fixed = reprefixLocation(location, origin, segment)
+        if (fixed === location) return resp
+        const headers = new Headers(resp.headers)
+        headers.set('location', fixed)
+        return new Response(resp.body, {
+          status: resp.status,
+          statusText: resp.statusText,
+          headers,
+        })
+      }
 
       // Inject the unified FORGE Suite banner into HTML pages only (not assets).
       const contentType = resp.headers.get('content-type') || ''
@@ -68,6 +88,33 @@ export default {
     // Everything else is the landing page.
     return env.ASSETS.fetch(request)
   },
+}
+
+/**
+ * Re-prefix a redirect `Location` from a proxied origin with the umbrella
+ * `/<segment>` path, so a redirect the origin emits at its own root resolves
+ * back under forge-mri.dev/<segment>/. Leaves external redirects (a different
+ * host) and already-prefixed Locations untouched. Returns a root-relative path
+ * (resolved against forge-mri.dev by the browser).
+ */
+function reprefixLocation(location: string, origin: string, segment: string): string {
+  let loc: URL
+  try {
+    // Resolve against the origin to normalize both relative ("/catalog/") and
+    // absolute ("https://<origin>/catalog/") Location forms.
+    loc = new URL(location, origin)
+  } catch {
+    return location
+  }
+  // Only rewrite redirects that stay on the proxied origin; an off-origin
+  // redirect (e.g. to github.com) must pass through verbatim.
+  if (loc.origin !== new URL(origin).origin) return location
+  const prefix = `/${segment}`
+  // Don't double-prefix if the origin already produced an umbrella-relative path.
+  if (loc.pathname === prefix || loc.pathname.startsWith(`${prefix}/`)) {
+    return loc.pathname + loc.search + loc.hash
+  }
+  return prefix + loc.pathname + loc.search + loc.hash
 }
 
 function comingSoon(name: string): Response {
