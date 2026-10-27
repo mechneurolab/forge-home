@@ -45,7 +45,7 @@ export default {
       // build at its own root, so it expects root-relative paths.
       const rest = url.pathname.slice(segment.length + 1) || '/'
       const target = new URL(rest + url.search, origin)
-      const resp = await fetch(new Request(target, request, { redirect: 'manual' }))
+      const resp = await fetch(new Request(target, request), { redirect: 'manual' })
 
       // Re-add the /<segment> prefix to same-origin redirect Locations. The
       // origin serves its base-'/<segment>/' build at its own ROOT, so its
