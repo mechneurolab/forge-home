@@ -5,9 +5,9 @@ Umbrella landing page for the **FORGE MRI suite**, served at [forge-mri.dev](htt
 Built with [VitePress](https://vitepress.dev) and deployed as a [Cloudflare Worker](https://developers.cloudflare.com/workers/)
 that serves this landing page at the root and reverse-proxies the suite's subprojects:
 
-- `/forge` → [FORGE](https://github.com/mechneurolab/forge) — MRI reconstruction
-- `/studio` → [FORGE Studio](https://github.com/mechneurolab/forge-studio)
-- `/sentinel` → [Sentinel](https://github.com/mechneurolab/Sentinel.jl) — magnetic resonance elastography
+- `/forge` → [FORGE](https://github.com/mechneurolab/forge), MRI reconstruction
+- `/studio` → [FORGE Studio](https://github.com/mechneurolab/forge-studio), the desktop pipeline app
+- `/sentinel` → [Sentinel](https://github.com/mechneurolab/sentinel), magnetic resonance elastography inversion
 
 ## Develop
 
