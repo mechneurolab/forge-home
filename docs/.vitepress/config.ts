@@ -2,14 +2,18 @@ import { defineConfig } from 'vitepress'
 
 // Landing page for the FORGE MRI suite (forge-mri.dev).
 //
-// The /forge, /studio, and /sentinel paths are NOT pages in this site — they are
+// The /forge, /studio and /sentinel paths are NOT pages in this site. They are
 // reverse-proxied to each subproject's own deployment by the Cloudflare Worker
 // router in ../../worker/index.ts. They resolve in production (and `wrangler dev`),
 // but 404 under plain `vitepress dev`. That's expected.
 export default defineConfig({
   title: 'FORGE Suite',
-  description: 'Open MRI software suite — forge-mri.dev',
+  description:
+    'Open-source software for MRI reconstruction and magnetic resonance elastography: FORGE, FORGE Studio and Sentinel.',
   cleanUrls: true,
+  // Links into /forge, /studio and /sentinel point at the proxied subproject
+  // sites, which the dead-link check can't see from here.
+  ignoreDeadLinks: [/^\/(forge|studio|sentinel)(\/|$)/],
   themeConfig: {
     // target: '_self' forces a full page load to the proxied subproject (these are
     // separate apps, not routes within this VitePress site, so SPA nav would break).

@@ -66,3 +66,18 @@
   background: var(--vp-c-brand-soft);
   border-radius: 10px;
 }
+
+/* "Find the right docs" grid on the home page */
+.docs-grid {
+  overflow-x: auto;
+}
+.docs-grid table {
+  display: table;
+  width: 100%;
+}
+.docs-grid td:first-child {
+  min-width: 11rem;
+}
+.docs-grid td:first-child strong {
+  color: var(--vp-c-text-1);
+}
