@@ -51,4 +51,4 @@ Each tool handles one step from raw scanner data to quantitative elastograms, an
 
 - **FORGE** reconstructs images from raw k-space on Apple Metal or NVIDIA CUDA GPUs.
 - **Sentinel** inverts the reconstructed displacement images into tissue stiffness maps.
-- **FORGE Studio** chains these steps with your own MATLAB, Python or Julia code, shows progress and convergence while a job runs, and opens the results in a viewer. Stages such as motion correction can be added and distributed as [forgepacks](https://forge-mri.dev/studio/catalog/creating-packs).
+- **FORGE Studio** chains these steps with your own MATLAB, Python or Julia code, shows progress and convergence while a job runs, and opens the results in a viewer. Stages such as motion correction can be added and distributed as [forgepacks](https://forge-mri.dev/studio/packs/).
