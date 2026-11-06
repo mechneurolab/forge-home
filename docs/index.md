@@ -61,7 +61,7 @@ computational steps, and each project in the suite owns one of them.
 - **FORGE Studio** chains these steps with your own MATLAB, Python or Julia code. It shows
   progress and convergence while a job runs and opens the results in a viewer. Stages such
   as unwrapping or brain masking can be added and shared as
-  [forgepacks](/studio/packs/){target="_self"}.
+  [forgepacks](/studio/explanation/forgepacks){target="_self"}.
 
 You can use FORGE and Sentinel on their own, from the command line or from your own code.
 FORGE Studio is the way to run the whole chain without writing glue scripts.
@@ -113,10 +113,11 @@ trying to do.
 
 ### Where to start
 
-- **You have MRE data and want stiffness maps.** Start with the FORGE Studio tutorials.
+- **You have MRE data and want stiffness maps.** [Install FORGE Studio](/studio/how-to/install){target="_self"}, then run
+  [your first reconstruction](/studio/tutorials/first-reconstruction){target="_self"}.
 - **You develop reconstruction methods.** Start with the FORGE tutorials, then the FORGE
   reference for the operators and command-line programs.
 - **You work on MRE inversion.** Start with the Sentinel tutorials and the Sentinel
   explanation of the inverse problem.
-- **You want to share your lab's method with other Studio users.** Read
-  [Building forgepacks](/studio/packs/){target="_self"}.
+- **You want to share your lab's method with other Studio users.** Build
+  [your first forgepack](/studio/tutorials/first-pack){target="_self"}.
