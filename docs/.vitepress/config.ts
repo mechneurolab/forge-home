@@ -23,7 +23,7 @@ export default defineConfig({
     ],
     footer: {
       message: 'Mechanical Neuroimaging Laboratory · University of Delaware',
-      copyright: 'MIT Licensed',
+      copyright: 'Each project is distributed under its own license.',
     },
   },
 })
