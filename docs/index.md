@@ -66,6 +66,11 @@ computational steps, and each project in the suite owns one of them.
 You can use FORGE and Sentinel on their own, from the command line or from your own code.
 FORGE Studio is the way to run the whole chain without writing glue scripts.
 
+<figure class="suite-demo">
+  <img src="/forgeview-demo.gif" alt="forgeSense reconstructing a synthetic radial scan while the forgeview terminal monitor shows progress bars, convergence sparklines, the log and a live image preview" width="904" height="684" loading="lazy">
+  <figcaption>FORGE from the command line: <code>forgeSense</code> reconstructing a synthetic 8-coil radial scan, watched with its <a href="/forge/how-to/monitor-a-reconstruction/" target="_self">forgeview</a> terminal monitor.</figcaption>
+</figure>
+
 ## Find the right docs {#docs}
 
 Each project's documentation is split into four parts, following the
